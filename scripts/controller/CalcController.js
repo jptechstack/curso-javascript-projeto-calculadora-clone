@@ -13,6 +13,7 @@ class CalcController {
         this._currentDate;
         this.initialize();
         this.initButtonsEvents();
+        this.initkeyboard();
     }
 
     initialize() {
@@ -26,6 +27,73 @@ class CalcController {
         }, 1000);
 
         this.setLastNumberToDisplay();
+
+    }
+
+    initkeyboard() {
+
+        document.addEventListener('keyup', e=>{
+
+            switch (e.code) {
+                case 'NumpadMultiply':
+                    this.addOperation('*');
+                    break;
+
+                case 'NumpadAdd':
+                    this.addOperation('+');
+                    break;
+
+                case 'NumpadSubtract':
+                    this.addOperation('-');
+                    break;
+
+                case 'NumpadDivide':
+                    this.addOperation('/');
+                    break;
+            }
+                        
+            switch (e.key) {
+                
+                case 'Escape':
+                    this.clearAll();
+                    break;
+
+                case 'Backspace':
+                    this.clearEntry();
+                    break;
+
+                case '+':
+                case '-':   
+                case '*':
+                case '/':
+                case '%':
+                    this.addOperation(e.key);
+                    break;
+
+                case 'Enter':
+                case '=':
+                    this.calc();
+                    break;
+
+                case '.':
+                case ',':
+                    this.addDot();
+                    break;
+
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    this.addOperation(parseInt(e.key));
+                    break;
+            }
+        });
 
     }
 
