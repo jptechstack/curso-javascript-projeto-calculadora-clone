@@ -13,10 +13,16 @@ class CalcController {
     }
 
     initialize() {
+
         this.setDisplayDateTime();
+
         setInterval(() => {
+
             this.setDisplayDateTime();
+
         }, 1000);
+
+        this.setLastNumberToDisplay();
 
     }
 
@@ -31,13 +37,17 @@ class CalcController {
 
     clearAll() {
 
-        this.operation = [];
+        this._operation = [];
+
+        this.setLastNumberToDisplay();
 
     }
 
     clearEntry() {
 
-        this.operation.pop();
+        this._operation.pop();
+
+        this.setLastNumberToDisplay();
 
     }
 
@@ -73,11 +83,29 @@ class CalcController {
 
     calc() {
 
-        let last = this._operation.pop();
+        let last = '';
 
+        if (this._operation.length > 3) {
+
+            last = this._operation.pop();
+
+        }
+        
         let result = eval(this._operation.join(""));
 
-        this._operation = [result, last];
+        if (last == '%') {
+
+            result /= 100;
+
+            this._operation = [result];
+
+        } else {
+
+            this._operation = [result];
+
+            if (last) this._operation.push(last);
+
+        }
 
         this.setLastNumberToDisplay();
     }
@@ -94,6 +122,8 @@ class CalcController {
             }
 
         }
+
+        if (!lastNumber) lastNumber = 0;
 
         this.displayCalc = lastNumber;
     }
@@ -113,6 +143,7 @@ class CalcController {
             }else {
                 
                 this.pushOperation(value);
+
                 this.setLastNumberToDisplay();
 
             }
@@ -126,6 +157,7 @@ class CalcController {
             } else { 
 
                 let newValue = this.getLastOperation().toString() + value.toString();
+
                 this.setLastOperation(parseInt(newValue));
 
                 this.setLastNumberToDisplay();
@@ -233,35 +265,51 @@ class CalcController {
     }
 
     get displayTime() {
+
         return this._timeEl.innerHTML;
+
     }
 
     set displayTime(value) {
+
         this._timeEl.innerHTML = value;
+
     }
     
     get displayDate() {
+
         return this._dateEl.innerHTML;
+
     }
 
     set displayDate(value) {
+
         this._dateEl.innerHTML = value;
+
     }
 
     get displayCalc() {
+
         return this._displayCalcEl.innerHTML;
+
     }
 
     set displayCalc(value) {
+
         this._displayCalcEl.innerHTML = value;
+
     }
 
     get currentDate() {
+
         return new Date();
+
     }
 
     set currentDate(value) {
+
         this._currentDate = value;
+        
     }
 
 }
