@@ -229,7 +229,20 @@ class CalcController {
 
     getResult() {
 
-        return eval(this._operation.join(""));
+        try {
+          
+            return eval(this._operation.join(""));
+        
+        } catch (e) {
+            
+            this.setError();
+            
+            this._operation = [];
+            
+            return null;
+            
+        }
+        
 
     }
 
@@ -258,18 +271,10 @@ class CalcController {
 
         }
         
-        let result;
+        let result = this.getResult();
 
-        try {
-
-            result = this.getResult();
-
-        } catch(e) {
-
-            this.setError();
-            this._operation = [];
+        if (result === null) {
             return;
-
         }
 
         if (!isFinite(result)) {
