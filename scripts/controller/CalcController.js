@@ -48,7 +48,7 @@ class CalcController {
 
         input.select();
 
-        document.execCommand("copy");
+        navigator.clipboard.writeText(this.displayCalc);
 
         input.remove();
     }
@@ -104,19 +104,19 @@ class CalcController {
             switch (e.code) {
                 case 'NumpadMultiply':
                     this.addOperation('*');
-                    break;
+                    return;
 
                 case 'NumpadAdd':
                     this.addOperation('+');
-                    break;
+                    return;
 
                 case 'NumpadSubtract':
                     this.addOperation('-');
-                    break;
+                    return;
 
                 case 'NumpadDivide':
                     this.addOperation('/');
-                    break;
+                    return;
             }
                         
             switch (e.key) {
@@ -211,7 +211,7 @@ class CalcController {
 
     isOperator(value) {
 
-        return (['+', '-', '*', '%', '/'].indexOf(value) > -1);
+        return (['+', '-', '*', '%', '/'].includes(value));
 
     }
 
@@ -258,7 +258,25 @@ class CalcController {
 
         }
         
-        let result = this.getResult();
+        let result;
+
+        try {
+
+            result = this.getResult();
+
+        } catch(e) {
+
+            this.setError();
+            this._operation = [];
+            return;
+
+        }
+
+        if (!isFinite(result)) {
+            this.setError();
+            this._operation = [];
+            return;
+        }
 
         if (last == '%') {
 
@@ -494,7 +512,13 @@ class CalcController {
 
     set displayCalc(value) {
 
-        this._displayCalcEl.innerHTML = value;
+        let displayValue = value;
+
+        if (displayValue.toString().length > 10) {
+            displayValue = Number(value).toExponential(5);
+        }
+
+        this._displayCalcEl.innerHTML = displayValue;
 
     }
 
