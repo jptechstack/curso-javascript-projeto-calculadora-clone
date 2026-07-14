@@ -13,7 +13,42 @@ class CalcController {
         this._currentDate;
         this.initialize();
         this.initButtonsEvents();
-        this.initkeyboard();
+        this.initKeyboard();
+    }
+
+    pasteFromClipboard() {
+
+        document.addEventListener('paste', e => {
+
+            let text = e.clipboardData.getData('Text');
+
+            let value = parseFloat(text);
+
+            if (!isNaN(value)) {
+
+                this._operation = [value];
+
+                this.setLastNumberToDisplay();
+
+            }
+
+        });
+
+    }
+
+    copyToClipboard() {
+
+        let input = document.createElement('input');
+
+        input.value = this.displayCalc;
+
+        document.body.appendChild(input);
+
+        input.select();
+
+        document.execCommand("copy");
+
+        input.remove();
     }
 
     initialize() {
@@ -27,10 +62,11 @@ class CalcController {
         }, 1000);
 
         this.setLastNumberToDisplay();
+        this.pasteFromClipboard();
 
     }
 
-    initkeyboard() {
+    initKeyboard() {
 
         document.addEventListener('keyup', e=>{
 
@@ -91,6 +127,10 @@ class CalcController {
                 case '8':
                 case '9':
                     this.addOperation(parseInt(e.key));
+                    break;
+
+                case 'c':
+                    if(e.ctrlKey) this.copyToClipboard();
                     break;
             }
         });
